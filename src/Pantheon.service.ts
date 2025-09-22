@@ -23,10 +23,12 @@ export class PantheonService implements OnModuleInit {
 
   async loadPersonnesFromApi() {
     const { data } = await firstValueFrom(
-      this.httpService.get<ApiPersonne[]>(
+      this.httpService.get<string>(
         'https://pantheon.world/data/2019/pantheon.tsv',
       ),
     );
+
+    console.log(data);
 
     data
       .map((apipersonne) => ({
