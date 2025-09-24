@@ -1,9 +1,9 @@
-import { readFile } from 'node:fs/promises';
-import { Injectable, OnModuleInit } from '@nestjs/common';
-import type { Personne } from './Personne';
-import { HttpService } from '@nestjs/axios';
-import { firstValueFrom, map, tap } from 'rxjs';
-import { ApiPersonne } from './ApiPersonne';
+import {readFile} from 'node:fs/promises';
+import {Injectable, OnModuleInit} from '@nestjs/common';
+import type {Personne} from './Personne';
+import {HttpService} from '@nestjs/axios';
+import {firstValueFrom} from 'rxjs';
+import {ApiPersonne} from './ApiPersonne';
 
 @Injectable()
 export class PantheonService implements OnModuleInit {
@@ -29,13 +29,11 @@ export class PantheonService implements OnModuleInit {
 
       data
           .map((apiPersonne : ApiPersonne) => ({
-              id : apiPersonne.id,
               name: apiPersonne.name,
-              numlangs : apiPersonne.numlangs,
-              birthcity : apiPersonne.birthcity,
-              birthstate : apiPersonne.birthstate,
+              birthCity : apiPersonne.birthcity,
+              birthState : apiPersonne.birthstate,
               countryName : apiPersonne.countryName,
-              countryCode : apiPersonne.countryCode,
+              countryCode2 : apiPersonne.countryCode,
               countryCode3 : apiPersonne.countryCode,
               LAT : apiPersonne.LAT,
               LON	: apiPersonne.LON,
@@ -44,22 +42,17 @@ export class PantheonService implements OnModuleInit {
               occupation : apiPersonne.occupation,
               industry : apiPersonne.industry,
               domain : apiPersonne.domain,
-              TotalPageViews : apiPersonne.TotalPageViews,
-              L_star	: apiPersonne.L_star,
-              PageViewsEnglish : apiPersonne.PageViewsEnglish,
-              PageViewsNonEnglish : apiPersonne.PageViewsNonEnglish,
-              AverageViews : apiPersonne.AverageViews,
-              HPI : apiPersonne.HPI
+              HPI : apiPersonne.HPI,
           }))
           .forEach(personne => this.addPersonne(personne));
   }
 
   addPersonne(personne: Personne) {
-
+      this.storage.set(personne.name, personne);
   }
 
-  getPersonne(isbn: string): Personne {
-    const personne = this.storage.get(isbn);
+    getPersonne(name: string): Personne {
+        const personne = this.storage.get(name);
 
     if (!personne) {
       throw new Error(`personne with the name ${name} not found`);
@@ -67,9 +60,32 @@ export class PantheonService implements OnModuleInit {
     return personne;
   }
 
+    getAllPersonnes(): Personne[] {
+        return Array.from(this.storage.values()).sort((a, b) =>
+            a.name.localeCompare(b.name),
+        );
+    }
 
-  remove(isbn: string) {
-    this.storage.delete(isbn);
+    getPersonnesFrom(codePays: number): Personne[] {
+        return this.getAllPersonnes()
+            .filter((personne) => (personne.countryCode3 === codePays) || (personne.countryCode2 === codePays))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    getPersonnesWithGender(gender: string): Personne[] {
+        return this.getAllPersonnes()
+            .filter((personne) => (personne.gender === gender) )
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    remove(name: string) {
+        this.storage.delete(name);
   }
+
+    search(term: string) {
+        return Array.from(this.storage.values())
+            .filter((book) => book.name.includes(term) || book.name.includes(term))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
 
 }

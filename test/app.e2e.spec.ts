@@ -20,10 +20,7 @@ describe('Books API', () => {
         httpRequester = request(app.getHttpServer());
     });
 
-    it('GET /books should fetch TSV from Pantheon', async () => {
-        const url = 'https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D';
-        const response = await axios.get<string>(url);
 
-        console.log(response.data); // Affiche le contenu de l'URL
-    });
+
+
 });
