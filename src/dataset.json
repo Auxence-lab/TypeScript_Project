@@ -1,9 +1,19 @@
 [
   {
-    "title": "The Lord of the Rings",
-    "author": "J. R. R. Tolkien",
-    "date": "1955",
-    "isbn": "978-0618640157"
+    "name" : "Gaëtan Maisse"
+    "birthCity" : "Saint Etienne",
+    "birthState" : "",
+    "countryName" : "France",
+    "countryCode2" : "FR",
+    "countryCode3" : "FRA",
+    "LAT" : "45.439695",
+    "LON"	: "4.3871779",
+    "birthyear" : "1995",
+    "gender" : "Male",
+    "occupation" : "Professor and DevOps",
+    "industry" : "Mines de Saint-Etienne",
+    "domain" : "Education",
+    "HPI" : "99.9"
   },
   {
     "title": "The Hobbit",
