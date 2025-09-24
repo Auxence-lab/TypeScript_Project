@@ -24,42 +24,14 @@ export class PantheonService implements OnModuleInit {
   async loadPersonnesFromApi() {
     const { data } = await firstValueFrom(
       this.httpService.get<string>(
-        'https://pantheon.world/data/2019/pantheon.tsv',
-      ),
+'https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D'      ),
     );
 
     console.log(data);
-
-    data
-      .map((apipersonne) => ({
-        author: apipersonne.authors,
-        date: apipersonne.publication_date,
-        isbn: apipersonne.isbn,
-        title: apipersonne.title,
-      }))
-        .forEach(personne => this.addPersonne(personne));
-  }
-
-  async loadPersonnesFromApiObservable() {
-    this.httpService
-      .get<ApiPersonne[]>('https://pantheon.world/data/2019/pantheon.tsv')
-      .pipe(
-        map((response) => response.data),
-        map((apipersonnes) =>
-          apipersonnes.map((apipersonne) => ({
-            author: apipersonne.authors,
-            date: apipersonne.publication_date,
-            isbn: apipersonne.isbn,
-            title: apipersonne.title,
-          })),
-        ),
-        tap((personnes) => personnes.forEach((personne) => this.addPersonne(personne))),
-      )
-      .subscribe();
   }
 
   addPersonne(personne: Personne) {
-    this.storage.set(personne.isbn, personne);
+
   }
 
   getPersonne(isbn: string): Personne {
@@ -71,25 +43,9 @@ export class PantheonService implements OnModuleInit {
     return personne;
   }
 
-  getAllPersonnes(): Personne[] {
-    return Array.from(this.storage.values()).sort((a, b) =>
-      a.title.localeCompare(b.title),
-    );
-  }
-
-  getPersonnesOf(author: string): Personne[] {
-    return this.getAllPersonnes()
-      .filter((personne) => personne.author === author)
-      .sort((a, b) => a.title.localeCompare(b.title));
-  }
 
   remove(isbn: string) {
     this.storage.delete(isbn);
   }
 
-  search(term: string) {
-    return Array.from(this.storage.values())
-      .filter((personne) => personne.title.includes(term) || personne.author.includes(term))
-      .sort((a, b) => a.title.localeCompare(b.title));
-  }
 }

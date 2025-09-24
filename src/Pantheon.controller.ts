@@ -17,31 +17,14 @@ export class PantheonController {
 
   @Post()
   createPersonne(@Body() personne: Personne): Personne {
-    this.personneService.addpersonne(personne);
-    return this.personneService.getPersonne(personne.isbn);
+    this.personneService.addPersonne(personne);
+    return personne;
   }
 
-  @Get()
-  getPersonnes(@Query('author') author: string): Personne[] {
-    if (author) {
-      return this.personneService.getPersonnesOf(author);
-    }
-    return this.personneService.getAllPersonnes();
-  }
-
-  @Get(':isbn')
-  getPersonne(@Param('isbn') isbn: string): Personne {
-    return this.personneService.getPersonne(isbn);
-  }
 
   @Delete(':isbn')
   deletePersonne(@Param('isbn') isbn: string): void {
     this.personneService.remove(isbn);
   }
 
-  @Post('search')
-  @HttpCode(200)
-  searchPersonnes(@Body() { term }: { term: string }): Personne[] {
-    return this.personneService.search(term);
-  }
 }
