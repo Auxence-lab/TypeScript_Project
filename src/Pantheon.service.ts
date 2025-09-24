@@ -23,11 +23,35 @@ export class PantheonService implements OnModuleInit {
 
   async loadPersonnesFromApi() {
     const { data } = await firstValueFrom(
-      this.httpService.get<string>(
+      this.httpService.get<ApiPersonne[]>(
 'https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D'      ),
     );
 
-    console.log(data);
+      data
+          .map((apiPersonne : ApiPersonne) => ({
+              id : apiPersonne.id,
+              name: apiPersonne.name,
+              numlangs : apiPersonne.numlangs,
+              birthcity : apiPersonne.birthcity,
+              birthstate : apiPersonne.birthstate,
+              countryName : apiPersonne.countryName,
+              countryCode : apiPersonne.countryCode,
+              countryCode3 : apiPersonne.countryCode,
+              LAT : apiPersonne.LAT,
+              LON	: apiPersonne.LON,
+              birthyear : apiPersonne.birthyear,
+              gender : apiPersonne.gender,
+              occupation : apiPersonne.occupation,
+              industry : apiPersonne.industry,
+              domain : apiPersonne.domain,
+              TotalPageViews : apiPersonne.TotalPageViews,
+              L_star	: apiPersonne.L_star,
+              PageViewsEnglish : apiPersonne.PageViewsEnglish,
+              PageViewsNonEnglish : apiPersonne.PageViewsNonEnglish,
+              AverageViews : apiPersonne.AverageViews,
+              HPI : apiPersonne.HPI
+          }))
+          .forEach(personne => this.addPersonne(personne));
   }
 
   addPersonne(personne: Personne) {
