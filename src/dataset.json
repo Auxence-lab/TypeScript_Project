@@ -1,78 +1,66 @@
 [
   {
-    "name" : "Gaëtan Maisse"
-    "birthCity" : "Saint Etienne",
-    "birthState" : "",
-    "countryName" : "France",
-    "countryCode2" : "FR",
-    "countryCode3" : "FRA",
-    "LAT" : "45.439695",
-    "LON"	: "4.3871779",
-    "birthyear" : "1995",
-    "gender" : "Male",
-    "occupation" : "Professor and DevOps",
-    "industry" : "Mines de Saint-Etienne",
-    "domain" : "Education",
-    "HPI" : "99.9"
+    "name": "Lucas Martin",
+    "birthCity": "Lyon",
+    "birthState": "Auvergne-Rhône-Alpes",
+    "countryName": "France",
+    "countryCode2": "FR",
+    "countryCode3": "FRA",
+    "LAT": "45.7640",
+    "LON": "4.8357",
+    "birthyear": "1992",
+    "gender": "Male",
+    "occupation": "Professor and DevOps",
+    "industry": "Université de Lyon",
+    "domain": "Education",
+    "HPI": "99.9"
   },
   {
-    "title": "The Hobbit",
-    "author": "J. R. R. Tolkien",
-    "date": "1937",
-    "isbn": "978-0618260300"
+    "name": "Claire Dubois",
+    "birthCity": "Bordeaux",
+    "birthState": "Nouvelle-Aquitaine",
+    "countryName": "France",
+    "countryCode2": "FR",
+    "countryCode3": "FRA",
+    "LAT": "44.8378",
+    "LON": "-0.5792",
+    "birthyear": "1996",
+    "gender": "Female",
+    "occupation": "Engineer Student",
+    "industry": "INSA Bordeaux",
+    "domain": "Engineering",
+    "HPI": "87.3"
   },
   {
-    "title": "The Fellowship of the Ring",
-    "author": "J. R. R. Tolkien",
-    "date": "1954",
-    "isbn": "978-0618346257"
+    "name": "Omar Khan",
+    "birthCity": "Karachi",
+    "birthState": "Sindh",
+    "countryName": "Pakistan",
+    "countryCode2": "PK",
+    "countryCode3": "PAK",
+    "LAT": "24.8607",
+    "LON": "67.0011",
+    "birthyear": "1990",
+    "gender": "Male",
+    "occupation": "Software Developer",
+    "industry": "Tech Industry",
+    "domain": "Computer Science",
+    "HPI": "90.4"
   },
   {
-    "title": "The Two Towers",
-    "author": "J. R. R. Tolkien",
-    "date": "1954",
-    "isbn": "978-0618346234"
-  },
-  {
-    "title": "A Game of Thrones",
-    "author": "George R. R. Martin",
-    "date": "1996",
-    "isbn": "978-0345391831"
-  },
-  {
-    "title": "A Clash of Kings",
-    "author": "George R. R. Martin",
-    "date": "1998",
-    "isbn": "978-0345391839"
-  },
-  {
-    "title": "The Hedge Knight",
-    "author": "George R. R. Martin",
-    "date": "1999",
-    "isbn": "978-0345391838"
-  },
-  {
-    "title": "The Princess and the Queen",
-    "author": "George R. R. Martin",
-    "date": "1997",
-    "isbn": "978-0345391833"
-  },
-  {
-    "title": "The Last Story",
-    "author": "George R. R. Martin",
-    "date": "1998",
-    "isbn": "978-0345391832"
-  },
-  {
-    "title": "The Two Towers",
-    "author": "J. R. R. Tolkien",
-    "date": "1954",
-    "isbn": "978-0618346257"
-  },
-  {
-    "title": "The Return of the King",
-    "author": "J. R. R. Tolkien",
-    "date": "1955",
-    "isbn": "978-0618640157"
+    "name": "Leila Mansouri",
+    "birthCity": "Oran",
+    "birthState": "",
+    "countryName": "Algeria",
+    "countryCode2": "DZ",
+    "countryCode3": "DZA",
+    "LAT": "35.6971",
+    "LON": "-0.6308",
+    "birthyear": "1995",
+    "gender": "Female",
+    "occupation": "Data Scientist",
+    "industry": "AI Research",
+    "domain": "Technology",
+    "HPI": "92.1"
   }
 ]
