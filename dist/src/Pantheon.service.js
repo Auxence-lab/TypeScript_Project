@@ -28,20 +28,56 @@ let PantheonService = class PantheonService {
         personnes.forEach((personne) => this.addPersonne(personne));
     }
     async loadPersonnesFromApi() {
-        const { data } = await (0, rxjs_1.firstValueFrom)(this.httpService.get('https://pantheon.world/data/2019/pantheon.tsv'));
-        console.log(data);
+        const { data } = await (0, rxjs_1.firstValueFrom)(this.httpService.get('https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D'));
+        data
+            .map((apiPersonne) => ({
+            name: apiPersonne.name,
+            birthCity: apiPersonne.birthcity,
+            birthState: apiPersonne.birthstate,
+            countryName: apiPersonne.countryName,
+            countryCode2: apiPersonne.countryCode,
+            countryCode3: apiPersonne.countryCode,
+            LAT: apiPersonne.LAT,
+            LON: apiPersonne.LON,
+            birthyear: apiPersonne.birthyear,
+            gender: apiPersonne.gender,
+            occupation: apiPersonne.occupation,
+            industry: apiPersonne.industry,
+            domain: apiPersonne.domain,
+            HPI: apiPersonne.HPI,
+        }))
+            .forEach(personne => this.addPersonne(personne));
     }
     addPersonne(personne) {
+        this.storage.set(personne.name, personne);
     }
-    getPersonne(isbn) {
-        const personne = this.storage.get(isbn);
+    getPersonne(name) {
+        const personne = this.storage.get(name);
         if (!personne) {
             throw new Error(`personne with the name ${name} not found`);
         }
         return personne;
     }
-    remove(isbn) {
-        this.storage.delete(isbn);
+    getAllPersonnes() {
+        return Array.from(this.storage.values()).sort((a, b) => a.name.localeCompare(b.name));
+    }
+    getPersonnesFrom(codePays) {
+        return this.getAllPersonnes()
+            .filter((personne) => (personne.countryCode3 === codePays) || (personne.countryCode2 === codePays))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+    getPersonnesWithGender(gender) {
+        return this.getAllPersonnes()
+            .filter((personne) => (personne.gender === gender))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }
+    remove(name) {
+        this.storage.delete(name);
+    }
+    search(term) {
+        return Array.from(this.storage.values())
+            .filter((book) => book.name.includes(term) || book.name.includes(term))
+            .sort((a, b) => a.name.localeCompare(b.name));
     }
 };
 exports.PantheonService = PantheonService;

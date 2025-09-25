@@ -9,6 +9,10 @@ export declare class PantheonService implements OnModuleInit {
     private loadPersonnesFromFile;
     loadPersonnesFromApi(): Promise<void>;
     addPersonne(personne: Personne): void;
-    getPersonne(isbn: string): Personne;
-    remove(isbn: string): void;
+    getPersonne(name: string): Personne;
+    getAllPersonnes(): Personne[];
+    getPersonnesFrom(codePays: number): Personne[];
+    getPersonnesWithGender(gender: string): Personne[];
+    remove(name: string): void;
+    search(term: string): Personne[];
 }

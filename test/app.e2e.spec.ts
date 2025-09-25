@@ -2,7 +2,6 @@ import type {INestApplication} from '@nestjs/common';
 import {Test, type TestingModule} from '@nestjs/testing';
 import type supertest from 'supertest';
 import * as request from 'supertest';
-import axios from 'axios';
 import {PantheonModule} from "../src/Pantheon.module";
 
 describe('Books API', () => {

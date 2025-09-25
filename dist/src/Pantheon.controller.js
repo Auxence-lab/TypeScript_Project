@@ -26,6 +26,24 @@ let PantheonController = class PantheonController {
     deletePersonne(isbn) {
         this.personneService.remove(isbn);
     }
+    getAllPersonnes() {
+        return this.personneService.getAllPersonnes();
+    }
+    getPersonne(name) {
+        return this.personneService.getPersonne(name);
+    }
+    getPersonnesFrom(code) {
+        return this.personneService.getPersonnesFrom(code);
+    }
+    getPersonnesWithGender(gender) {
+        return this.personneService.getPersonnesWithGender(gender);
+    }
+    search(term) {
+        return this.personneService.search(term !== null && term !== void 0 ? term : '');
+    }
+    remove(name) {
+        this.personneService.remove(name);
+    }
 };
 exports.PantheonController = PantheonController;
 __decorate([
@@ -42,6 +60,47 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], PantheonController.prototype, "deletePersonne", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Array)
+], PantheonController.prototype, "getAllPersonnes", null);
+__decorate([
+    (0, common_1.Get)(':name'),
+    __param(0, (0, common_1.Param)('name')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Object)
+], PantheonController.prototype, "getPersonne", null);
+__decorate([
+    (0, common_1.Get)('countrycode/:code'),
+    __param(0, (0, common_1.Param)('code')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Array)
+], PantheonController.prototype, "getPersonnesFrom", null);
+__decorate([
+    (0, common_1.Get)('gender/:gender'),
+    __param(0, (0, common_1.Param)('gender')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Array)
+], PantheonController.prototype, "getPersonnesWithGender", null);
+__decorate([
+    (0, common_1.Get)('search'),
+    __param(0, (0, common_1.Query)('term')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Array)
+], PantheonController.prototype, "search", null);
+__decorate([
+    (0, common_1.Delete)(':name'),
+    __param(0, (0, common_1.Param)('name')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], PantheonController.prototype, "remove", null);
 exports.PantheonController = PantheonController = __decorate([
     (0, common_1.Controller)('/personnes'),
     __metadata("design:paramtypes", [Pantheon_service_1.PantheonService])
