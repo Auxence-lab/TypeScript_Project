@@ -26,14 +26,14 @@ let PantheonController = class PantheonController {
     deletePersonne(isbn) {
         this.personneService.remove(isbn);
     }
-    getAllPersonnes() {
+    getPersonnes(countryCode) {
+        if (countryCode) {
+            return this.personneService.getPersonnesFrom(countryCode);
+        }
         return this.personneService.getAllPersonnes();
     }
     getPersonne(name) {
         return this.personneService.getPersonne(name);
-    }
-    getPersonnesFrom(code) {
-        return this.personneService.getPersonnesFrom(code);
     }
     getPersonnesWithGender(gender) {
         return this.personneService.getPersonnesWithGender(gender);
@@ -62,10 +62,11 @@ __decorate([
 ], PantheonController.prototype, "deletePersonne", null);
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('countryCode')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Array)
-], PantheonController.prototype, "getAllPersonnes", null);
+], PantheonController.prototype, "getPersonnes", null);
 __decorate([
     (0, common_1.Get)(':name'),
     __param(0, (0, common_1.Param)('name')),
@@ -73,13 +74,6 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Object)
 ], PantheonController.prototype, "getPersonne", null);
-__decorate([
-    (0, common_1.Get)('countrycode/:code'),
-    __param(0, (0, common_1.Param)('code')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Array)
-], PantheonController.prototype, "getPersonnesFrom", null);
 __decorate([
     (0, common_1.Get)('gender/:gender'),
     __param(0, (0, common_1.Param)('gender')),

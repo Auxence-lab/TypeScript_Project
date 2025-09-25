@@ -5,9 +5,8 @@ export declare class PantheonController {
     constructor(personneService: PantheonService);
     createPersonne(personne: Personne): Personne;
     deletePersonne(isbn: string): void;
-    getAllPersonnes(): Personne[];
+    getPersonnes(countryCode: number): Personne[];
     getPersonne(name: string): Personne;
-    getPersonnesFrom(code: number): Personne[];
     getPersonnesWithGender(gender: string): Personne[];
     search(term: string): Personne[];
     remove(name: string): void;

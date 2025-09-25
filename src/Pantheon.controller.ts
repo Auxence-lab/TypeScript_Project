@@ -30,7 +30,10 @@ export class PantheonController {
     }
 
     @Get()
-    getAllPersonnes(): Personne[] {
+    getPersonnes(@Query('countryCode') countryCode: number): Personne[] {
+        if (countryCode) {
+            return this.personneService.getPersonnesFrom(countryCode);
+        }
         return this.personneService.getAllPersonnes();
     }
 
@@ -39,10 +42,6 @@ export class PantheonController {
         return this.personneService.getPersonne(name);
     }
 
-    @Get('countrycode/:code')
-    getPersonnesFrom(@Param('code') code: number): Personne[] {
-        return this.personneService.getPersonnesFrom(code);
-    }
     @Get('gender/:gender')
     getPersonnesWithGender(@Param('gender') gender: string): Personne[] {
         return this.personneService.getPersonnesWithGender(gender);

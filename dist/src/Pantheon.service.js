@@ -14,6 +14,7 @@ const promises_1 = require("node:fs/promises");
 const common_1 = require("@nestjs/common");
 const axios_1 = require("@nestjs/axios");
 const rxjs_1 = require("rxjs");
+const Papa = require("papaparse");
 let PantheonService = class PantheonService {
     constructor(httpService) {
         this.httpService = httpService;
@@ -28,23 +29,36 @@ let PantheonService = class PantheonService {
         personnes.forEach((personne) => this.addPersonne(personne));
     }
     async loadPersonnesFromApi() {
-        const { data } = await (0, rxjs_1.firstValueFrom)(this.httpService.get('https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D'));
-        data
-            .map((apiPersonne) => ({
-            name: apiPersonne.name,
-            birthCity: apiPersonne.birthcity,
-            birthState: apiPersonne.birthstate,
-            countryName: apiPersonne.countryName,
-            countryCode2: apiPersonne.countryCode,
-            countryCode3: apiPersonne.countryCode,
-            LAT: apiPersonne.LAT,
-            LON: apiPersonne.LON,
-            birthyear: apiPersonne.birthyear,
-            gender: apiPersonne.gender,
-            occupation: apiPersonne.occupation,
-            industry: apiPersonne.industry,
-            domain: apiPersonne.domain,
-            HPI: apiPersonne.HPI,
+        const { data } = await (0, rxjs_1.firstValueFrom)(this.httpService.get('https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D&', {
+            responseType: 'text'
+        }));
+        const parseResult = Papa.parse(data, {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true,
+            transformHeader: (header) => header.trim(),
+        });
+        if (parseResult.errors.length > 0) {
+            console.warn('CSV parsing errors:', parseResult.errors);
+        }
+        const csvData = parseResult.data;
+        csvData
+            .filter(row => row && Object.keys(row).length > 0)
+            .map((csvRow) => ({
+            name: csvRow.name || csvRow.Name,
+            birthCity: csvRow.birthcity || csvRow.BirthCity || csvRow['Birth City'],
+            birthState: csvRow.birthstate || csvRow.BirthState || csvRow['Birth State'],
+            countryName: csvRow.countryName || csvRow.CountryName || csvRow['Country Name'],
+            countryCode2: csvRow.countryCode || csvRow.CountryCode || csvRow['Country Code'],
+            countryCode3: csvRow.countryCode3 || csvRow.CountryCode3 || csvRow['Country Code 3'],
+            LAT: csvRow.LAT || csvRow.Latitude || csvRow.lat,
+            LON: csvRow.LON || csvRow.Longitude || csvRow.lon,
+            birthyear: csvRow.birthyear || csvRow.BirthYear || csvRow['Birth Year'],
+            gender: csvRow.gender || csvRow.Gender,
+            occupation: csvRow.occupation || csvRow.Occupation,
+            industry: csvRow.industry || csvRow.Industry,
+            domain: csvRow.domain || csvRow.Domain,
+            HPI: csvRow.HPI || csvRow.hpi,
         }))
             .forEach(personne => this.addPersonne(personne));
     }

@@ -4,6 +4,7 @@ import type {Personne} from './Personne';
 import {HttpService} from '@nestjs/axios';
 import {firstValueFrom} from 'rxjs';
 import {ApiPersonne} from './ApiPersonne';
+import * as Papa from 'papaparse'
 
 @Injectable()
 export class PantheonService implements OnModuleInit {
@@ -21,31 +22,52 @@ export class PantheonService implements OnModuleInit {
     personnes.forEach((personne) => this.addPersonne(personne));
   }
 
-  async loadPersonnesFromApi() {
-    const { data } = await firstValueFrom(
-      this.httpService.get<ApiPersonne[]>(
-'https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D'      ),
-    );
+    async loadPersonnesFromApi() {
+            const { data } = await firstValueFrom(
+                this.httpService.get(
+                    'https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D&',
+                    {
+                        responseType: 'text' // Important: specify text response type for CSV
+                    }
+                ),
+            );
 
-      data
-          .map((apiPersonne : ApiPersonne) => ({
-              name: apiPersonne.name,
-              birthCity : apiPersonne.birthcity,
-              birthState : apiPersonne.birthstate,
-              countryName : apiPersonne.countryName,
-              countryCode2 : apiPersonne.countryCode,
-              countryCode3 : apiPersonne.countryCode,
-              LAT : apiPersonne.LAT,
-              LON	: apiPersonne.LON,
-              birthyear : apiPersonne.birthyear,
-              gender : apiPersonne.gender,
-              occupation : apiPersonne.occupation,
-              industry : apiPersonne.industry,
-              domain : apiPersonne.domain,
-              HPI : apiPersonne.HPI,
-          }))
-          .forEach(personne => this.addPersonne(personne));
-  }
+
+            const parseResult = Papa.parse(data, {
+                header: true, // First row contains column headers
+                dynamicTyping: true, // Automatically convert numbers
+                skipEmptyLines: true, // Skip empty rows
+                transformHeader: (header) => header.trim(), // Remove whitespace from headers
+            });
+
+            if (parseResult.errors.length > 0) {
+                console.warn('CSV parsing errors:', parseResult.errors);
+            }
+
+            const csvData = parseResult.data as any[];
+
+            csvData
+                .filter(row => row && Object.keys(row).length > 0) // Filter out empty rows
+                .map((csvRow: any) => ({
+                    name: csvRow.name || csvRow.Name,
+                    birthCity: csvRow.birthcity || csvRow.BirthCity || csvRow['Birth City'],
+                    birthState: csvRow.birthstate || csvRow.BirthState || csvRow['Birth State'],
+                    countryName: csvRow.countryName || csvRow.CountryName || csvRow['Country Name'],
+                    countryCode2: csvRow.countryCode || csvRow.CountryCode || csvRow['Country Code'],
+                    countryCode3: csvRow.countryCode3 || csvRow.CountryCode3 || csvRow['Country Code 3'], // Adjust if different column
+                    LAT: csvRow.LAT || csvRow.Latitude || csvRow.lat,
+                    LON: csvRow.LON || csvRow.Longitude || csvRow.lon,
+                    birthyear: csvRow.birthyear || csvRow.BirthYear || csvRow['Birth Year'],
+                    gender: csvRow.gender || csvRow.Gender,
+                    occupation: csvRow.occupation || csvRow.Occupation,
+                    industry: csvRow.industry || csvRow.Industry,
+                    domain: csvRow.domain || csvRow.Domain,
+                    HPI: csvRow.HPI || csvRow.hpi,
+                }))
+                .forEach(personne => this.addPersonne(personne));
+
+
+        }
 
   addPersonne(personne: Personne) {
       this.storage.set(personne.name, personne);

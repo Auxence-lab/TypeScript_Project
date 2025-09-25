@@ -6,17 +6,37 @@ const Pantheon_service_1 = require("../src/Pantheon.service");
 describe('PantheonController', () => {
     let controller;
     let service;
+    const confucius = {
+        name: 'confucius',
+        birthCity: 'Qufu',
+        birthState: 'Shandong',
+        countryName: 'China',
+        countryCode2: 156,
+        countryCode3: 156,
+        LAT: 35.6,
+        LON: 116.98,
+        birthyear: -551,
+        gender: 'M',
+        occupation: 'Philosopher',
+        industry: 'Education',
+        domain: 'Ethics',
+        HPI: 90,
+    };
     const ali = {
         name: 'Ali',
-        countryCode2: 'FR',
-        countryCode3: 'FRA',
+        birthCity: 'Alger',
+        birthState: 'Algiers',
+        countryName: 'Algeria',
+        countryCode2: 12,
+        countryCode3: 12,
+        LAT: 36.75,
+        LON: 3.04,
+        birthyear: 1985,
         gender: 'male',
-    };
-    const amina = {
-        name: 'Amina',
-        countryCode2: 'US',
-        countryCode3: 'USA',
-        gender: 'female',
+        occupation: 'Engineer',
+        industry: 'Technology',
+        domain: 'Software',
+        HPI: 60,
     };
     const mockService = {
         addPersonne: jest.fn(),
@@ -40,10 +60,10 @@ describe('PantheonController', () => {
     });
     describe('createPersonne', () => {
         it('appelle addPersonne et renvoie le body', () => {
-            const res = controller.createPersonne(ali);
+            const res = controller.createPersonne(confucius);
             expect(service.addPersonne).toHaveBeenCalledTimes(1);
-            expect(service.addPersonne).toHaveBeenCalledWith(ali);
-            expect(res).toEqual(ali);
+            expect(service.addPersonne).toHaveBeenCalledWith(confucius);
+            expect(res).toEqual(confucius);
         });
     });
     describe('deletePersonne (DELETE :isbn)', () => {
@@ -55,48 +75,48 @@ describe('PantheonController', () => {
     });
     describe('getAllPersonnes', () => {
         it('renvoie toutes les personnes', () => {
-            service.getAllPersonnes.mockReturnValue([ali, amina]);
+            service.getAllPersonnes.mockReturnValue([confucius, ali]);
             const res = controller.getAllPersonnes();
             expect(service.getAllPersonnes).toHaveBeenCalledTimes(1);
-            expect(res).toEqual([ali, amina]);
+            expect(res).toEqual([confucius, ali]);
         });
     });
     describe('getPersonne (:name)', () => {
         it('renvoie la personne demandée', () => {
-            service.getPersonne.mockReturnValue(ali);
-            const res = controller.getPersonne('Ali');
-            expect(service.getPersonne).toHaveBeenCalledWith('Ali');
-            expect(res).toEqual(ali);
+            service.getPersonne.mockReturnValue(confucius);
+            const res = controller.getPersonne('confucius');
+            expect(service.getPersonne).toHaveBeenCalledWith('confucius');
+            expect(res).toEqual(confucius);
         });
     });
     describe('getPersonnesFrom (countrycode/:code)', () => {
         it('renvoie les personnes pour le code pays (number attendu par le service)', () => {
-            service.getPersonnesFrom.mockReturnValue([ali]);
+            service.getPersonnesFrom.mockReturnValue([confucius]);
             const res = controller.getPersonnesFrom(250);
             expect(service.getPersonnesFrom).toHaveBeenCalledWith(250);
-            expect(res).toEqual([ali]);
+            expect(res).toEqual([confucius]);
         });
     });
     describe('getPersonnesWithGender (gender/:gender)', () => {
         it('renvoie les personnes du genre demandé', () => {
-            service.getPersonnesWithGender.mockReturnValue([amina]);
+            service.getPersonnesWithGender.mockReturnValue([ali]);
             const res = controller.getPersonnesWithGender('female');
             expect(service.getPersonnesWithGender).toHaveBeenCalledWith('female');
-            expect(res).toEqual([amina]);
+            expect(res).toEqual([ali]);
         });
     });
     describe('search (?term=)', () => {
         it('renvoie le résultat de recherche', () => {
-            service.search.mockReturnValue([ali]);
-            const res = controller.search('Ali');
-            expect(service.search).toHaveBeenCalledWith('Ali');
-            expect(res).toEqual([ali]);
+            service.search.mockReturnValue([confucius]);
+            const res = controller.search('confucius');
+            expect(service.search).toHaveBeenCalledWith('confucius');
+            expect(res).toEqual([confucius]);
         });
     });
     describe('remove (DELETE :name)', () => {
         it('appelle remove avec la valeur de :name', () => {
-            controller.remove('Amina');
-            expect(service.remove).toHaveBeenCalledWith('Amina');
+            controller.remove('ali');
+            expect(service.remove).toHaveBeenCalledWith('ali');
         });
     });
 });
