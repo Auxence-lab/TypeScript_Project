@@ -1,54 +1,45 @@
-import {readFile} from 'node:fs/promises';
-import {Injectable, OnModuleInit} from '@nestjs/common';
-import type {Personne} from './Personne';
-import {HttpService} from '@nestjs/axios';
-import {firstValueFrom} from 'rxjs';
-import * as Papa from 'papaparse'
+import { readFile } from 'node:fs/promises';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import type { Personne } from './Personne';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
+import * as Papa from 'papaparse';
 
 @Injectable()
 export class PantheonService implements OnModuleInit {
     private readonly storage: Map<string, Personne> = new Map();
 
-    constructor(private readonly httpService: HttpService) {
-    }
+    constructor(private readonly httpService: HttpService) {}
 
     async onModuleInit() {
         await Promise.all([this.loadPersonnesFromFile(), this.loadPersonnesFromApi()]);
     }
 
     async loadPersonnesFromApi() {
-        const {data} = await firstValueFrom(
+        const { data } = await firstValueFrom(
             this.httpService.get(
                 'https://dataverse.harvard.edu/api/access/datafile/:persistentId?persistentId=doi:10.7910/DVN/28201/VEG34D&',
-                {
-                    responseType: 'text' // Important: specify text response type for CSV
-                }
-            ),
+                { responseType: 'text' }
+            )
         );
 
-
         const parseResult = Papa.parse(data, {
-            header: true, // First row contains column headers
-            dynamicTyping: true, // Automatically convert numbers
-            skipEmptyLines: true, // Skip empty rows
-            transformHeader: (header) => header.trim(), // Remove whitespace from headers
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true,
         });
-
-        if (parseResult.errors.length > 0) {
-            console.warn('CSV parsing errors:', parseResult.errors);
-        }
 
         const csvData = parseResult.data as any[];
 
         csvData
-            .filter(row => row && Object.keys(row).length > 0) // Filter out empty rows
-            .map((csvRow: any) => ({
+            .filter(row => row && Object.keys(row).length > 0)
+            .map(csvRow => ({
                 name: csvRow.name || csvRow.Name,
                 birthCity: csvRow.birthcity || csvRow.BirthCity || csvRow['Birth City'],
                 birthState: csvRow.birthstate || csvRow.BirthState || csvRow['Birth State'],
                 countryName: csvRow.countryName || csvRow.CountryName || csvRow['Country Name'],
                 countryCode2: csvRow.countryCode || csvRow.CountryCode || csvRow['Country Code'],
-                countryCode3: csvRow.countryCode3 || csvRow.CountryCode3 || csvRow['Country Code 3'], // Adjust if different column
+                countryCode3: csvRow.countryCode3 || csvRow.CountryCode3 || csvRow['Country Code 3'],
                 LAT: csvRow.LAT || csvRow.Latitude || csvRow.lat,
                 LON: csvRow.LON || csvRow.Longitude || csvRow.lon,
                 birthyear: csvRow.birthyear || csvRow.BirthYear || csvRow['Birth Year'],
@@ -59,8 +50,6 @@ export class PantheonService implements OnModuleInit {
                 HPI: csvRow.HPI || csvRow.hpi,
             }))
             .forEach(personne => this.addPersonne(personne));
-
-
     }
 
     addPersonne(personne: Personne) {
@@ -69,56 +58,51 @@ export class PantheonService implements OnModuleInit {
 
     getPersonne(name: string): Personne {
         const personne = this.storage.get(name);
-
-        if (!personne) {
-            throw new Error(`personne with the name ${name} not found`);
-        }
+        if (!personne) throw new Error(`personne with the name ${name} not found`);
         return personne;
     }
 
-    getAllPersonnes(): Personne[] {
-        return Array.from(this.storage.values()).sort((a, b) =>
-            a.name.localeCompare(b.name),
+    getAllPersonnes(pretty = false): string | Personne[] {
+        const personnes = Array.from(this.storage.values()).sort((a, b) =>
+            a.name.localeCompare(b.name)
         );
+        return pretty ? JSON.stringify(personnes, null, 2) : personnes;
     }
 
-    getPersonnesFrom(codePays: number): Personne[] {
-        return this.getAllPersonnes()
-            .filter((personne) => (personne.countryCode3 === codePays) || (personne.countryCode2 === codePays))
+    getPersonnesFrom(codePays: number, pretty = false): string | Personne[] {
+        const personnes = this.getAllPersonnes() as Personne[];
+        const filtered = personnes
+            .filter(p => p.countryCode3 === codePays || p.countryCode2 === codePays)
             .sort((a, b) => a.name.localeCompare(b.name));
+        return pretty ? JSON.stringify(filtered, null, 2) : filtered;
     }
 
-    getPersonnesPage(page: number): Personne[] {
-        const pageSize = 15;
-        const startIndex = (page - 1) * pageSize;
-        const endIndex = page * pageSize;
-
-        return this.getAllPersonnes()
-            .sort((a, b) => a.name.localeCompare(b.name))
-            .slice(startIndex, endIndex);
+    getPersonnesPage(page: number, pageSize = 15, pretty = false): string | Personne[] {
+        const personnes = (this.getAllPersonnes() as Personne[]).slice((page - 1) * pageSize, page * pageSize);
+        return pretty ? JSON.stringify(personnes, null, 2) : personnes;
     }
 
-
-    getPersonnesWithGender(gender: string): Personne[] {
-        return this.getAllPersonnes()
-            .filter((personne) => (personne.gender === gender))
+    getPersonnesWithGender(gender: string, pretty = false): string | Personne[] {
+        const personnes = (this.getAllPersonnes() as Personne[])
+            .filter(p => p.gender === gender)
             .sort((a, b) => a.name.localeCompare(b.name));
+        return pretty ? JSON.stringify(personnes, null, 2) : personnes;
     }
 
     remove(name: string) {
         this.storage.delete(name);
     }
 
-    search(term: string) {
-        return Array.from(this.storage.values())
-            .filter((book) => book.name.includes(term) || book.name.includes(term))
+    search(term: string, pretty = false): string | Personne[] {
+        const personnes = (Array.from(this.storage.values()))
+            .filter(p => p.name.includes(term))
             .sort((a, b) => a.name.localeCompare(b.name));
+        return pretty ? JSON.stringify(personnes, null, 2) : personnes;
     }
 
     private async loadPersonnesFromFile() {
         const data = await readFile('src/dataset.json', 'utf8');
         const personnes = JSON.parse(data.toString()) as Personne[];
-        personnes.forEach((personne) => this.addPersonne(personne));
+        personnes.forEach(personne => this.addPersonne(personne));
     }
-
 }
