@@ -350,7 +350,7 @@ export class PantheonController {
     <section class="section">
       <h3>📊 Aperçu du dataset</h3>
       <p style="margin-bottom: 15px; color: #7f8c8d;">Les 10 premières personnalités de notre base de données :</p>
-      <div class="dataset-preview">\${prettyJSON}</div>
+      <div class="dataset-preview">${prettyJSON}</div>
     </section>
 
     <footer class="footer">
