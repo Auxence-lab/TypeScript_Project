@@ -118,6 +118,17 @@ describe('Books API', () => {
         console.log(response.body);
     });
 
+    it('GET /pagination', async () => {
+
+        const response = await httpRequester
+            .get('/personnes')
+            .query({ Page: '3' })
+            .expect(200);
+
+        expect(response.body).toEqual(expect.any(Array))
+        console.log(response.body);
+    });
+
 
 })
 

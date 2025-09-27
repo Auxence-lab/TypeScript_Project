@@ -12,7 +12,7 @@ import type { Personne } from './Personne';
 import { PantheonService } from './Pantheon.service';
 import * as string_decoder from "node:string_decoder";
 
-@Controller('/personnes')
+@Controller('')
 export class PantheonController {
     constructor(private readonly personneService: PantheonService) {
     }
@@ -24,22 +24,28 @@ export class PantheonController {
     }
 
 
-    @Delete(':isbn')
+    @Delete('/personnes/:isbn')
     deletePersonne(@Param('isbn') isbn: string): void {
         this.personneService.remove(isbn);
     }
 
-    @Get()
-    getPersonnes(@Query('countryCode') countryCode: number): Personne[] {
-        if (countryCode) {
-            return this.personneService.getPersonnesFrom(countryCode);
+    @Get('/personnes')
+    getPersonnes(@Query('Page', ParseIntPipe) numberPage?: number): Personne[] {
+        if (numberPage) {
+            return this.personneService.getPersonnesPage(numberPage);
         }
         return this.personneService.getAllPersonnes();
     }
 
-    @Get(':name')
-    getPersonne(@Param('name') name: string): Personne {
+
+    @Get('/personnes/:name')
+    getPersonneName(@Param('name') name: string): Personne {
         return this.personneService.getPersonne(name);
+    }
+
+    @Get('/countrycode/:countryCode')
+    getPersonneCountrycode(@Param('countryCode') countryCode: number): Personne[] {
+        return this.personneService.getPersonnesFrom(countryCode);
     }
 
     @Get('gender/:gender')
@@ -53,7 +59,7 @@ export class PantheonController {
     }
 
 
-    @Delete(':name')
+    @Delete('/personnes/:name')
     remove(@Param('name') name: string): void {
         this.personneService.remove(name);
     }
