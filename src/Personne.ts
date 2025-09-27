@@ -3,8 +3,8 @@ export interface Personne {
     birthCity : string;
     birthState : string;
     countryName : string;
-    countryCode2 : number;
-    countryCode3 : number;
+    countryCode2 : string;
+    countryCode3 : string;
     LAT : number;
     LON	: number;
     birthyear : number;

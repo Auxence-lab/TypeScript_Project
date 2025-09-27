@@ -82,7 +82,7 @@ export class PantheonService implements OnModuleInit {
         );
     }
 
-    getPersonnesFrom(codePays: number): Personne[] {
+    getPersonnesFrom(codePays: string | number): Personne[] {
         return this.getAllPersonnes()
             .filter((personne) => (personne.countryCode3 === codePays) || (personne.countryCode2 === codePays))
             .sort((a, b) => a.name.localeCompare(b.name));
