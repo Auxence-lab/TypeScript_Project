@@ -30,12 +30,16 @@ export class PantheonController {
     }
 
     @Get('/personnes')
-    getPersonnes(@Query('Page', ParseIntPipe) numberPage?: number): Personne[] {
+    getPersonnes(@Query('Page') page?: string): Personne[] {
+        const numberPage = page ? parseInt(page, 10) : undefined;
+
         if (numberPage) {
             return this.personneService.getPersonnesPage(numberPage);
         }
+
         return this.personneService.getAllPersonnes();
     }
+
 
 
     @Get('/personnes/:name')
