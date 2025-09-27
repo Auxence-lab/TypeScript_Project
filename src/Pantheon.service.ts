@@ -4,12 +4,15 @@ import type { Personne } from './Personne';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map, tap } from 'rxjs';
 import { ApiPersonne } from './ApiPersonne';
+import {VilleService} from "./Ville.service";
 
 @Injectable()
 export class PantheonService implements OnModuleInit {
   constructor(private readonly httpService: HttpService) {}
 
   private readonly storage: Map<string, Personne> = new Map();
+  private readonly villes: VilleService = new VilleService();
+
 
   async onModuleInit() {
     await Promise.all([this.loadPersonnesFromFile(), this.loadPersonnesFromApi()]);
@@ -55,11 +58,11 @@ export class PantheonService implements OnModuleInit {
   }
 
   addPersonne(personne: Personne) {
-
+      this.storage.set(personne.name, personne);
   }
 
-  getPersonne(isbn: string): Personne {
-    const personne = this.storage.get(isbn);
+  getPersonne(name: string): Personne {
+    const personne = this.storage.get(name);
 
     if (!personne) {
       throw new Error(`personne with the name ${name} not found`);
