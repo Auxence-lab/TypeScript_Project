@@ -19,7 +19,12 @@ export class PantheonController {
     @Get()
     getHome(): string {
         const personnes = this.personneService.getAllPersonnes();
-        const prettyJSON = JSON.stringify(personnes.slice(0, 10), null, 2);
+
+        const prettyJSON = JSON.stringify(personnes.slice(0, 5), null, 2) // Réduire à 5 pour plus de lisibilité
+            .replace(/(".*?"):/g, '<span style="color: #3498db;">$1</span>:') // Clés en bleu
+            .replace(/: (".*?")/g, ': <span style="color: #e74c3c;">$1</span>') // Valeurs string en rouge
+            .replace(/: (\d+\.?\d*)/g, ': <span style="color: #f39c12;">$1</span>') // Nombres en orange
+            .replace(/: (true|false|null)/g, ': <span style="color: #9b59b6;">$1</span>'); // Booléens en violet
 
         return `
 <!DOCTYPE html>
