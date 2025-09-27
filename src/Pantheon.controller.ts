@@ -80,7 +80,6 @@ export class PantheonController {
 
         if (numberPage) {
             return this.personneService.getPersonnesPage(numberPage);
-            JSON.stringify(personnes, null, 2);
         }
 
         return this.personneService.getAllPersonnes();
