@@ -20,7 +20,7 @@ export class PantheonController {
     @Get()
     getHome(): string {
         const personnes = this.personneService.getAllPersonnes();
-        const prettyJSON = JSON.stringify(personnes.slice(0, 20), null, 2);
+        const prettyJSON = JSON.stringify(personnes.slice(0, 10), null, 2);
 
         return `
   <!DOCTYPE html>
@@ -46,12 +46,12 @@ export class PantheonController {
     <ul>
       <li><a href="/personnes">Toutes les personnes</a></li>
       <li><a href="/personnes?Page=1">Personnes paginées (Page 1)</a></li>
-      <li><a href="/search?term=Einstein">Recherche par terme</a></li>
-      <li><a href="/gender/male">Personnes de genre masculin</a></li>
-      <li><a href="/countrycode/FR">Personnes par countryCode</a></li>
+      <li><a href="/search?term=Einstein">Recherche par termes</a></li>
+      <li><a href="/gender/Female">Personnes de genre feminin (mettre Male pour masculin)</a></li>
+      <li><a href="/countrycode/FR">Personnes par Code Pays</a></li>
     </ul>
 
-    <h3>Aperçu du dataset (20 premières personnes)</h3>
+    <h3>Aperçu du dataset (10 premières personnes)</h3>
     <pre>${prettyJSON}</pre>
 
     <p>En vous souhaitant bonne navigation !</p>
@@ -59,8 +59,6 @@ export class PantheonController {
   </html>
   `;
     }
-
-
 
     @Post()
     createPersonne(@Body() personne: Personne): Personne {
