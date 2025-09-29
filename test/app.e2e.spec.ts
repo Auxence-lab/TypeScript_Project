@@ -7,7 +7,7 @@ import axios from 'axios';
 import { parse } from 'csv-parse/sync'
 import {PantheonService} from "../src/Pantheon.service";
 
-describe('Books API', () => {
+describe('Pantheon API', () => {
     let app: INestApplication;
     let httpRequester: supertest.Agent;
 
@@ -32,8 +32,8 @@ describe('Books API', () => {
         const response = await httpRequester
             .post('/personnes')
             .send({
-                name: "Lucas Martin",
-                birthCity: "Lyon",
+                name: "Gaetan Maisse",
+                birthCity: "Saint-Etienne",
                 birthState: "Auvergne-Rhône-Alpes",
                 countryName: "France",
                 countryCode2: "FR",
@@ -43,15 +43,15 @@ describe('Books API', () => {
                 birthyear: "1992",
                 gender: "Male",
                 occupation: "Professor and DevOps",
-                industry: "Université de Lyon",
+                industry: "Mines Saint Etienne",
                 domain: "Education",
                 HPI: "99.9"
             })
             .expect(201);
 
         expect(response.body).toEqual({
-            name: "Lucas Martin",
-            birthCity: "Lyon",
+            name: "Gaetan Maisse",
+            birthCity: "Saint-Etienne",
             birthState: "Auvergne-Rhône-Alpes",
             countryName: "France",
             countryCode2: "FR",
@@ -61,7 +61,7 @@ describe('Books API', () => {
             birthyear: "1992",
             gender: "Male",
             occupation: "Professor and DevOps",
-            industry: "Université de Lyon",
+            industry: "Mines Saint Etienne",
             domain: "Education",
             HPI: "99.9"
         });
@@ -110,8 +110,7 @@ describe('Books API', () => {
     it('GET /Names by Countryside', async () => {
 
         const response = await httpRequester
-            .get('/personnes')
-            .query({ countryCode: 'FR' })
+            .get('/countrycode/FR')
             .expect(200);
 
         expect(response.body).toEqual(expect.any(Array))

@@ -385,7 +385,7 @@ export class PantheonController {
 `;
     }
 
-    @Post()
+    @Post('/personnes')
     createPersonne(@Body() personne: Personne): Personne {
         this.personneService.addPersonne(personne);
         return personne;
