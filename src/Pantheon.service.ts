@@ -57,6 +57,7 @@ export class PantheonService implements OnModuleInit {
                 industry: csvRow.industry || csvRow.Industry,
                 domain: csvRow.domain || csvRow.Domain,
                 HPI: csvRow.HPI || csvRow.hpi,
+                favorite : csvRow.favorite || csvRow.Favorite,
             }))
             .forEach(personne => this.addPersonne(personne));
 
@@ -120,5 +121,20 @@ export class PantheonService implements OnModuleInit {
         const personnes = JSON.parse(data.toString()) as Personne[];
         personnes.forEach((personne) => this.addPersonne(personne));
     }
+
+    setFavorite(name: string): Personne {
+        const personne = this.storage.get(name);
+
+        if (!personne) {
+            throw new Error(`Personne with the name ${name} not found`);
+        }
+
+        personne.favorite = true;
+        this.storage.set(name, personne);
+        return personne;
+    }
+
+
+
 
 }

@@ -129,6 +129,43 @@ describe('Books API', () => {
         console.log(response.body);
     });
 
+    it('PUT /personnes/:name/favorite - met une personne en favoris', async () => {
+        // 1. Crée une personne via POST
+        const payload = {
+            name: "Alan Turing",
+            birthCity: "London",
+            countryName: "United Kingdom",
+            countryCode2: "GB",
+            countryCode3: "GBR",
+            LAT: "51.5074",
+            LON: "-0.1278",
+            birthyear: "1912",
+            gender: "Male",
+            occupation: "Mathematician",
+            domain: "Science",
+            HPI: "98.5"
+        };
+
+        await httpRequester.post('/').send(payload).expect(201);
+
+        // 2. Met en favori via PUT
+        const resFav = await httpRequester
+            .put('/personnes/Alan Turing/favorite')
+            .expect(200);
+
+        expect(resFav.body).toEqual(expect.objectContaining({
+            ...payload,
+            favorite: true
+        }));
+
+        // 3. Vérifie que c’est bien persisté via GET
+        const resGet = await httpRequester
+            .get('/personnes/Alan Turing')
+            .expect(200);
+
+        expect(resGet.body.favorite).toBe(true);
+    });
+
 
 })
 

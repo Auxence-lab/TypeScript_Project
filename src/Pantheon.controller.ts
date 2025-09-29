@@ -7,6 +7,7 @@ import {
     Param, ParseIntPipe,
     Post,
     Query,
+    Put
 } from '@nestjs/common';
 import type { Personne } from './Personne';
 import { PantheonService } from './Pantheon.service';
@@ -432,4 +433,14 @@ export class PantheonController {
     remove(@Param('name') name: string): void {
         this.personneService.remove(name);
     }
+
+
+
+    @Put('/personnes/:name/favorite')
+    setFavorite(@Param('name') name: string): Personne {
+    return this.personneService.setFavorite(name);
+    }
+
+
+
 }

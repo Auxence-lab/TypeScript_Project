@@ -1,4 +1,5 @@
 export interface Personne {
+    favorite: boolean;
     name : string;
     birthCity : string;
     birthState : string;
@@ -13,4 +14,5 @@ export interface Personne {
     industry : string;
     domain : string;
     HPI : number;
+
 }
