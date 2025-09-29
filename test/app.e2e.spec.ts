@@ -67,7 +67,7 @@ describe('Books API', () => {
         });
     });
 
-    it('GET /personnes/:name', async () => {
+    it('POST /personnes/:name', async () => {
         await httpRequester.post('/personnes').send({
             name: "Lucas Martin",
             birthCity: "Lyon",
